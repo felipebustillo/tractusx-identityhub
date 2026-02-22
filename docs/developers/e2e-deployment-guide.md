@@ -130,12 +130,38 @@ privatekey_alias: "did:web:identity-hub.example.com:BPN#key-1"
 privatekey_alias: "token-signer-key"
 ```
 
-### 6. Participant Activation Workaround
+### 6. Base64-Encoded Participant IDs in API URLs
 
-Identity Hub v0.1.1 creates participants in state `CREATED` (1) even when `"active": true` is passed. Activation must be done via SQL:
+All Identity API endpoints that include `{participantContextId}` in the URL path require the value to be **base64-encoded**. This is not clearly documented upstream.
+
+```bash
+# Example: BPNL00000003AYRE → QlBOTDAwMDAwMDAzQVlSRQ==
+echo -n "BPNL00000003AYRE" | base64
+# URL-encode the result for use in paths:
+# QlBOTDAwMDAwMDAzQVlSRQ%3D%3D
+```
+
+### 7. Participant Activation Workaround
+
+Identity Hub v0.1.1 creates participants in state `DEACTIVATED` (2) even when `"active": true` is passed. The state values in the database are:
+
+| State | Code | Description |
+|-------|------|-------------|
+| CREATED | 0 | Not yet operational |
+| ACTIVATED | 1 | Operational |
+| DEACTIVATED | 2 | Disabled |
+
+**Preferred — via API** (requires base64-encoded participant ID):
+
+```bash
+curl -X POST "http://identityhub:8082/api/identity/v1alpha/participants/{base64(BPN)}/state?isActive=true" \
+  -H "x-api-key: {SUPER_USER_API_KEY}"
+```
+
+**Alternative — via SQL** (direct database access):
 
 ```sql
-UPDATE participant_context SET state = 2 WHERE participant_id = '{BPN}';
+UPDATE participant_context SET state = 1 WHERE participant_context_id = '{BPN}';
 ```
 
 ## E2E Data Exchange Flow
@@ -247,11 +273,13 @@ Returns the actual data from the Provider's backend data source.
 | 9 | Vault alias with `#` breaks lookup | Data plane can't sign tokens | Use simple alias name |
 | 10 | Participant activation bug in IH v0.1.1 | Participants stuck in CREATED state | Activate via SQL |
 | 11 | Issuer Service log path is wrong | Logs go to `identityhub.log` | Fixed to `issuerservice.log` |
+| 12 | IS chart missing `holder` and `credentials` datasource | 500 error on holder/credential operations | Added to datasource ConfigMap template |
+| 13 | IS Kubernetes Service missing admin ports | `issueradmin` (8086), `identity` (8087), `sts` (8085) not accessible via Service | Access via pod port-forward or add ports to Service |
 
 ## Repository
 
 The full deployment configuration (Helm values, scripts, ingress) is maintained at:
-https://github.com/felipebustillo/tractus-x
+https://github.com/felipebustillo/tractusx-identityhub
 
 ---
 
