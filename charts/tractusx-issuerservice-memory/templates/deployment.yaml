@@ -138,10 +138,6 @@ spec:
               value: >-
                 {{ printf "%s-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=%v"  (ternary "-XX:UseSVE=0 " "" .Values.issuerservice.useSVE) .Values.issuerservice.debug.port}}
             {{- end }}
-          {{- else}}
-            - name: "JAVA_TOOL_OPTIONS"
-              value: >-
-                {{ printf "%s"  (ternary "-XX:UseSVE=0 " "" .Values.issuerservice.useSVE) }}
           {{- end }}
 
 
@@ -207,6 +203,10 @@ spec:
         {{- else }}
           emptyDir: { }
         {{- end }}
+      {{- with .Values.issuerservice.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.issuerservice.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

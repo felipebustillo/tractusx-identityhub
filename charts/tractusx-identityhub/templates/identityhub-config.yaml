@@ -46,10 +46,20 @@ data:
   web.http.did.path: {{ .Values.identityhub.endpoints.did.path | quote }}
   web.http.accounts.port: {{ .Values.identityhub.endpoints.accounts.port | quote}}
   web.http.accounts.path: {{ .Values.identityhub.endpoints.accounts.path | quote}}
+  web.http.accounts.auth.alias: {{ .Values.identityhub.endpoints.accounts.authKeyAlias | required ".Values.identityhub.endpoints.accounts.authKeyAlias is required" | quote }}
   web.http.version.port: {{ .Values.identityhub.endpoints.version.port | quote}}
   web.http.version.path: {{ .Values.identityhub.endpoints.version.path | quote}}
   web.http.sts.port: {{ .Values.identityhub.endpoints.sts.port | quote}}
   web.http.sts.path: {{ .Values.identityhub.endpoints.sts.path | quote}}
+
+  #################
+  ## APPLICATION ##
+  #################
+  {{- if .Values.identityhub.ihIamId }}
+  edc.ih.iam.id: {{ .Values.identityhub.ihIamId | quote }}
+  {{- end }}
+  edc.iam.did.web.use.https: {{ .Values.identityhub.didweb.https | quote }}
+  edc.iam.accesstoken.jti.validation: {{ .Values.identityhub.jtivalidation | quote }}
 
   ###########
   ## VAULT ##

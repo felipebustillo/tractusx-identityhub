@@ -47,6 +47,6 @@ spec:
       resource:
         name: memory
         target:
-          averageUtilization: {{ .Values.identityhub.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ .Values.identityhub.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
 {{- end }}

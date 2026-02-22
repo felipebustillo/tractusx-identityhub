@@ -202,6 +202,10 @@ spec:
         {{- else }}
           emptyDir: { }
         {{- end }}
+      {{- with .Values.identityhub.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.identityhub.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

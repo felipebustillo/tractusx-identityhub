@@ -269,7 +269,7 @@ issuerservice:
         # -- Formatter to use in handler, formatter must be set in identityhub.logging.formatters
         formatter: org.eclipse.tractusx.identityhub.monitor.ColorfulFormatter
         # -- Path where the log is created, must be the same path as the logging.path values
-        pattern: /app/logs/identityhub.log
+        pattern: /app/logs/issuerservice.log
         # -- Limit of bytes to write before log file rotation
         limit: 0
         # -- Number of files to use in log file rotation
@@ -304,6 +304,8 @@ issuerservice:
       java.util.logging.ConsoleHandler.formatter=org.eclipse.tractusx.identityhub.monitor.ColorfulFormatter
       java.util.logging.ConsoleHandler.level=ALL
       org.eclipse.tractusx.identityhub.monitor.ColorfulFormatter.format=%7$s[%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS] [%4$s] %5$s%6$s%n%8$s
+  # [hostAliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/) to configure custom entries in /etc/hosts
+  hostAliases: []
   # [node selector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) to constrain pods to nodes
   nodeSelector: {}
   # [tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) to configure preferred nodes

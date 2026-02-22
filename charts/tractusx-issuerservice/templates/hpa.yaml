@@ -47,6 +47,6 @@ spec:
       resource:
         name: memory
         target:
-          averageUtilization: {{ .Values.issuerservice.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ .Values.issuerservice.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
 {{- end }}

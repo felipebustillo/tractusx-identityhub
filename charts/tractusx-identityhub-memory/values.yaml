@@ -119,6 +119,15 @@ identityhub:
       port: 8087
       path: /api/sts
 
+  # -- The DID of the IdentityHub participant. Must be set externally.
+  ihIamId: ""
+
+  # -- Whether web DIDs should be interpreted as HTTPS or HTTP
+  didweb:
+    https: false
+
+  # -- Whether Self-Issued ID tokens are protected with JTI claims (=nonce)
+  jtivalidation: false
 
   service:
     # -- [Service type](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types) to expose the running application on a set of Pods as a network service.
@@ -319,6 +328,8 @@ identityhub:
       java.util.logging.ConsoleHandler.formatter=org.eclipse.tractusx.identityhub.monitor.ColorfulFormatter
       java.util.logging.ConsoleHandler.level=ALL
       org.eclipse.tractusx.identityhub.monitor.ColorfulFormatter.format=%7$s[%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS] [%4$s] %5$s%6$s%n%8$s
+  # [hostAliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/) to configure custom entries in /etc/hosts
+  hostAliases: []
   # [node selector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) to constrain pods to nodes
   nodeSelector: {}
   # [tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) to configure preferred nodes
