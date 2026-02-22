@@ -1,0 +1,34 @@
+meta {
+  name: 3. Poll Negotiation Status
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{CONSUMER_MGMT}}/v3/contractnegotiations/{{NEGOTIATION_ID}}
+  body: none
+  auth: apikey
+}
+
+auth:apikey {
+  key: X-Api-Key
+  value: {{EDC_API_KEY}}
+  placement: header
+}
+
+vars:post-response {
+  NEGOTIATION_STATE: res.body.state
+  CONTRACT_AGREEMENT_ID: res.body.contractAgreementId
+}
+
+docs {
+  Poll the negotiation status until it reaches `FINALIZED`.
+
+  State progression: `REQUESTED` → `AGREED` → `VERIFIED` → `FINALIZED`
+
+  Once `FINALIZED`, the `contractAgreementId` field contains the agreement ID needed for the transfer process.
+
+  If the state is `TERMINATED`, the negotiation failed — check Provider logs for policy evaluation errors.
+
+  **Repeat this request** every few seconds until `state` is `FINALIZED`.
+}

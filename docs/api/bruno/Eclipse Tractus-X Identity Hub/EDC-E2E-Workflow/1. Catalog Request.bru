@@ -1,0 +1,42 @@
+meta {
+  name: 1. Catalog Request
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{CONSUMER_MGMT}}/v3/catalog/request
+  body: json
+  auth: apikey
+}
+
+auth:apikey {
+  key: X-Api-Key
+  value: {{EDC_API_KEY}}
+  placement: header
+}
+
+body:json {
+  {
+    "@context": {
+      "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+    },
+    "counterPartyAddress": "{{PROVIDER_DSP}}",
+    "counterPartyId": "{{PROVIDER_DID}}",
+    "protocol": "dataspace-protocol-http"
+  }
+}
+
+vars:post-response {
+  ASSET_ID: res.body['dcat:dataset']['@id'] || res.body['dcat:dataset'][0]['@id']
+  OFFER_ID: res.body['dcat:dataset']['odrl:hasPolicy']['@id'] || res.body['dcat:dataset'][0]['odrl:hasPolicy']['@id'] || res.body['dcat:dataset']['odrl:hasPolicy'][0]['@id']
+  OFFER_POLICY: res.body['dcat:dataset']['odrl:hasPolicy'] || res.body['dcat:dataset'][0]['odrl:hasPolicy']
+}
+
+docs {
+  Query the Provider's catalog to discover available datasets and their access policies.
+
+  The response is a DCAT catalog containing datasets. Each dataset has an ODRL policy (offer) that defines the access conditions.
+
+  **Important**: `counterPartyId` (Provider's DID) is mandatory for IATP authentication.
+}

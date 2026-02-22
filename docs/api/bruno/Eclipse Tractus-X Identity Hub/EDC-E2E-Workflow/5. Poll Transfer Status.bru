@@ -1,0 +1,33 @@
+meta {
+  name: 5. Poll Transfer Status
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{CONSUMER_MGMT}}/v3/transferprocesses/{{TRANSFER_ID}}
+  body: none
+  auth: apikey
+}
+
+auth:apikey {
+  key: X-Api-Key
+  value: {{EDC_API_KEY}}
+  placement: header
+}
+
+vars:post-response {
+  TRANSFER_STATE: res.body.state
+}
+
+docs {
+  Poll the transfer process status until it reaches `STARTED`.
+
+  State progression: `REQUESTED` → `STARTED`
+
+  Once `STARTED`, the Provider has generated an Endpoint Data Reference (EDR) that the Consumer can retrieve.
+
+  If the state is `TERMINATED`, the transfer failed — check Provider data plane logs.
+
+  **Repeat this request** every few seconds until `state` is `STARTED`.
+}

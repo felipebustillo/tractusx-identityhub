@@ -1,0 +1,43 @@
+meta {
+  name: 4. Transfer Process
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{CONSUMER_MGMT}}/v3/transferprocesses
+  body: json
+  auth: apikey
+}
+
+auth:apikey {
+  key: X-Api-Key
+  value: {{EDC_API_KEY}}
+  placement: header
+}
+
+body:json {
+  {
+    "@context": {
+      "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+    },
+    "@type": "TransferRequest",
+    "counterPartyAddress": "{{PROVIDER_DSP}}",
+    "counterPartyId": "{{PROVIDER_DID}}",
+    "protocol": "dataspace-protocol-http",
+    "contractId": "{{CONTRACT_AGREEMENT_ID}}",
+    "transferType": "HttpData-PULL"
+  }
+}
+
+vars:post-response {
+  TRANSFER_ID: res.body['@id']
+}
+
+docs {
+  Initiate a data transfer using the contract agreement.
+
+  `HttpData-PULL` means the Consumer will pull data from the Provider's data plane using an access token (EDR).
+
+  After sending, poll the transfer status (next request) until it reaches `STARTED`.
+}

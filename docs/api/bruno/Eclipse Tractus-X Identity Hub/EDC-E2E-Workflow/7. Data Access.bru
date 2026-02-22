@@ -1,0 +1,24 @@
+meta {
+  name: 7. Data Access
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{DATA_PLANE_ENDPOINT}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{DATA_PLANE_AUTH}}
+}
+
+docs {
+  Fetch the actual data from the Provider's data plane using the EDR token.
+
+  The data plane proxies this request to the backend data source configured in the Provider's asset definition.
+
+  A successful response contains the data from the Provider's backend — this confirms the full E2E data exchange lifecycle is working:
+  Catalog → Negotiation → Transfer → EDR → Data Access
+}

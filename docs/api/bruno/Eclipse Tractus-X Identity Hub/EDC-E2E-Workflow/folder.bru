@@ -1,0 +1,36 @@
+meta {
+  name: EDC E2E Workflow
+  seq: 10
+}
+
+docs {
+  # EDC End-to-End Data Exchange Workflow
+
+  This folder contains the complete EDC data exchange lifecycle
+  using Identity Hub as the DCP wallet:
+
+  1. Catalog Request — query Provider's available datasets
+  2. Contract Negotiation — agree to the access policy
+  3. Poll Negotiation — wait until FINALIZED
+  4. Transfer Process — initiate HttpData-PULL
+  5. Poll Transfer — wait until STARTED
+  6. EDR Retrieval — get data plane endpoint + access token
+  7. Data Access — fetch actual data from Provider
+
+  ## Prerequisites
+
+  - EDC Consumer and Provider deployed with Identity Hub as wallet
+  - Participants created and activated in Identity Hub
+  - Verifiable Credentials stored (MembershipCredential + DataExchangeGovernanceCredential)
+  - BPNs registered in BDRS
+
+  ## Variables
+
+  Set these in the collection variables before running:
+
+  - `CONSUMER_MGMT` — Consumer management API (e.g. http://localhost:8081/management)
+  - `EDC_API_KEY` — Management API key
+  - `PROVIDER_DSP` — Provider DSP protocol endpoint
+  - `PROVIDER_DID` — Provider's DID
+  - `PROVIDER_BPN` — Provider's BPN
+}

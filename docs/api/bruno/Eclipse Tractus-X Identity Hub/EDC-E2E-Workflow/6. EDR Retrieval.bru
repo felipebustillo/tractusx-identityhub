@@ -1,0 +1,32 @@
+meta {
+  name: 6. EDR Retrieval
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{CONSUMER_MGMT}}/v3/edrs/{{TRANSFER_ID}}/dataaddress
+  body: none
+  auth: apikey
+}
+
+auth:apikey {
+  key: X-Api-Key
+  value: {{EDC_API_KEY}}
+  placement: header
+}
+
+vars:post-response {
+  DATA_PLANE_ENDPOINT: res.body.endpoint
+  DATA_PLANE_AUTH: res.body.authorization
+}
+
+docs {
+  Retrieve the Endpoint Data Reference (EDR) for the transfer.
+
+  The EDR contains:
+  - `endpoint` — the Provider's data plane public URL
+  - `authorization` — a short-lived bearer token signed by the Provider's data plane
+
+  Use these values in the next request to fetch the actual data.
+}

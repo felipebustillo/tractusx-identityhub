@@ -1,0 +1,61 @@
+meta {
+  name: 2. Contract Negotiation
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{CONSUMER_MGMT}}/v3/contractnegotiations
+  body: json
+  auth: apikey
+}
+
+auth:apikey {
+  key: X-Api-Key
+  value: {{EDC_API_KEY}}
+  placement: header
+}
+
+body:json {
+  {
+    "@context": {
+      "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+    },
+    "@type": "ContractRequest",
+    "counterPartyAddress": "{{PROVIDER_DSP}}",
+    "counterPartyId": "{{PROVIDER_DID}}",
+    "protocol": "dataspace-protocol-http",
+    "policy": {
+      "@context": "http://www.w3.org/ns/odrl.jsonld",
+      "@id": "{{OFFER_ID}}",
+      "@type": "odrl:Offer",
+      "odrl:permission": [],
+      "odrl:prohibition": [],
+      "odrl:obligation": [],
+      "odrl:target": {
+        "@id": "{{ASSET_ID}}"
+      },
+      "odrl:assigner": {
+        "@id": "{{PROVIDER_BPN}}"
+      }
+    }
+  }
+}
+
+vars:post-response {
+  NEGOTIATION_ID: res.body['@id']
+}
+
+docs {
+  Initiate a contract negotiation with the Provider using the offer from the catalog.
+
+  The policy must include:
+  - `odrl:target` — the asset ID (as `{"@id": "..."}`)
+  - `odrl:assigner` — the Provider's BPN (as `{"@id": "..."}`)
+
+  **Note**: The policy `@id` must match the offer ID from the catalog response.
+  The `permission`, `prohibition`, and `obligation` arrays should match the catalog offer.
+  For simple policies, empty arrays work.
+
+  After sending, poll the negotiation status (next request) until it reaches `FINALIZED`.
+}
